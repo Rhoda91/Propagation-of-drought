@@ -76,6 +76,7 @@ data_SHEDs['Index']=np.arange(320);
 data_SHEDs.set_index('Index',inplace=True)
 
 #%%
+#creating the upstream areas contributing the the current catchment flow
 data_SHEDs['diff_area'] = data_SHEDs['UP_AREA'] - data_SHEDs['SUB_AREA']   
        
 # In[8]
@@ -83,11 +84,11 @@ data_SHEDs['diff_area'] = data_SHEDs['UP_AREA'] - data_SHEDs['SUB_AREA']
 # PRECIPITATION
     #loading precipitation dataset in sets of 10 to reduce to time and space allocated for the data
 
-data = xr.open_mfdataset('*.nc',chunks={"time":10})
+data = xr.open_mfdataset('*.nc',chunks={"time":10}) #was in the resolution of 0.1 degrees
 
 data =data.sel(lon =slice (30,53.5), lat = slice (17,-5))#slice the data to the study area
 
-#data.to_netcdf(r'C:\Users\roo290\surfdrive (backup)\Data\precip_combined.nc')               #convert to netcdf to enable easier regridding
+#data.to_netcdf(r'C:\Users\roo290\surfdrive (backup)\Data\precip_combined.nc')               #convert to netcdf to enable easier regridding for the SM and Q data
 # data = xr.open_dataset ('precip_combined.nc')
 print(data)
 
@@ -111,7 +112,7 @@ sheds_mask_poly = regionmask.Regions(name = 'sheds_mask', numbers = list(range(0
 
 print(sheds_mask_poly)
 
-index_Id = np.arange(37,45)
+index_Id = np.arange(0,320)
 
 mask_prec = sheds_mask_poly.mask(data.isel(time = 0 ), lon_name = 'lon', lat_name = 'lat')
 
